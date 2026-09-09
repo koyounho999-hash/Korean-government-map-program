@@ -1,0 +1,279 @@
+/* =========================================================
+   임시정부 이동경로 지도 — 태극기 모티프 스타일
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+
+:root{
+  --fabric:      #f6f1e4;   /* 광목천 바탕 */
+  --fabric-dim:  #efe8d6;
+  --ink:         #14213d;   /* 남색 잉크 */
+  --ink-soft:    #4a5470;
+  --taeguk-red:  #c53a3a;
+  --taeguk-blue: #0c4a8f;
+  --gold:        #a9812f;
+  --line:        #d9cfae;
+  --white:       #fffdf7;
+  --shadow:      0 1px 0 rgba(20,33,61,.08);
+
+  --serif: 'Noto Serif KR', serif;
+  --sans:  'Noto Sans KR', sans-serif;
+}
+
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  background:var(--fabric);
+  color:var(--ink);
+  font-family:var(--sans);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  /* 은은한 천 질감 */
+  content:"";
+  position:fixed; inset:0;
+  pointer-events:none;
+  background-image:
+    repeating-linear-gradient(90deg, rgba(20,33,61,.02) 0 1px, transparent 1px 90px),
+    repeating-linear-gradient(0deg, rgba(20,33,61,.02) 0 1px, transparent 1px 90px);
+  z-index:0;
+}
+
+a{ color:inherit; }
+button{ font-family:inherit; }
+
+/* ---------- 레이아웃 ---------- */
+#app{ position:relative; z-index:1; min-height:100%; display:flex; flex-direction:column; }
+
+header.site-header{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:18px 28px;
+  border-bottom:2px solid var(--ink);
+  background:var(--fabric);
+}
+.brand{ display:flex; align-items:center; gap:12px; cursor:pointer; }
+.brand .mark{ width:34px; height:34px; flex:none; }
+.brand h1{
+  font-family:var(--serif);
+  font-size:1.15rem;
+  font-weight:700;
+  margin:0;
+  letter-spacing:.02em;
+}
+.brand .sub{ display:block; font-size:.72rem; color:var(--ink-soft); font-weight:400; margin-top:2px; }
+
+nav.breadcrumb{
+  font-size:.85rem;
+  color:var(--ink-soft);
+  display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+}
+nav.breadcrumb .crumb{ cursor:pointer; }
+nav.breadcrumb .crumb:hover{ color:var(--taeguk-red); text-decoration:underline; }
+nav.breadcrumb .sep{ color:var(--line); }
+nav.breadcrumb .current{ color:var(--ink); font-weight:600; }
+
+main{ flex:1; }
+
+.view{ display:none; padding:32px 28px 64px; max-width:1180px; margin:0 auto; }
+.view.active{ display:block; }
+
+/* ---------- 트라이그램 섹션 마커 ---------- */
+.trigram-label{
+  display:flex; align-items:center; gap:10px;
+  font-family:var(--serif);
+  font-weight:700;
+  font-size:1.5rem;
+  margin:0 0 6px;
+  color:var(--ink);
+}
+.trigram-label .tri{
+  font-size:1.1rem;
+  color:var(--taeguk-blue);
+  letter-spacing:.15em;
+}
+.section-desc{ color:var(--ink-soft); margin:0 0 22px; max-width:60ch; }
+
+/* ---------- 지도 ---------- */
+.map-wrap{
+  border:2px solid var(--ink);
+  background:var(--white);
+  box-shadow:var(--shadow);
+  margin-bottom:26px;
+}
+#map, #city-map{
+  width:100%; height:460px;
+  filter: sepia(6%) saturate(92%);
+}
+#city-map{ height:340px; }
+
+.leaflet-taeguk-pin{
+  width:26px; height:26px;
+  border-radius:50%;
+  background:conic-gradient(var(--taeguk-red) 0 50%, var(--taeguk-blue) 50% 100%);
+  border:2px solid var(--white);
+  box-shadow:0 1px 4px rgba(0,0,0,.35);
+}
+.leaflet-loc-pin{
+  width:16px; height:16px;
+  border-radius:50%;
+  background:var(--taeguk-red);
+  border:2px solid var(--white);
+  box-shadow:0 1px 4px rgba(0,0,0,.35);
+}
+.leaflet-popup-content-wrapper{ border-radius:0; font-family:var(--sans); }
+
+/* ---------- 도시 목록 ---------- */
+.city-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(210px,1fr));
+  gap:14px;
+}
+.city-card{
+  border:1px solid var(--line);
+  background:var(--white);
+  padding:16px 16px 14px;
+  cursor:pointer;
+  transition:border-color .15s ease, transform .15s ease;
+  position:relative;
+}
+.city-card:hover{ border-color:var(--taeguk-red); transform:translateY(-2px); }
+.city-card .name{ font-family:var(--serif); font-weight:700; font-size:1.05rem; }
+.city-card .hanja{ color:var(--ink-soft); font-size:.8rem; margin-left:4px; }
+.city-card .period{
+  display:inline-block; margin-top:6px;
+  font-size:.72rem; color:var(--taeguk-blue); font-weight:500;
+  border:1px solid var(--taeguk-blue); padding:2px 8px;
+}
+
+/* ---------- 도시 상세 ---------- */
+.city-hero{
+  border-left:4px solid var(--taeguk-red);
+  padding-left:18px; margin-bottom:24px;
+}
+.city-hero .name-row{ display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+.city-hero h2{ font-family:var(--serif); font-size:2rem; margin:0; }
+.city-hero .hanja{ font-size:1.1rem; color:var(--ink-soft); }
+.city-hero .period{ color:var(--taeguk-blue); font-weight:600; font-size:.9rem; margin-top:4px; }
+.city-hero p{ margin-top:10px; color:var(--ink-soft); max-width:70ch; }
+
+.location-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(240px,1fr));
+  gap:14px;
+  margin-top:6px;
+}
+.location-card{
+  border:1px solid var(--line);
+  background:var(--white);
+  padding:16px;
+  cursor:pointer;
+  transition:border-color .15s ease, transform .15s ease;
+}
+.location-card:hover{ border-color:var(--taeguk-blue); transform:translateY(-2px); }
+.location-card .name{ font-family:var(--serif); font-weight:700; }
+.location-card .hanja{ color:var(--ink-soft); font-size:.78rem; }
+.location-card .period{ font-size:.72rem; color:var(--gold); font-weight:600; margin:6px 0; }
+.location-card p{ margin:0; font-size:.85rem; color:var(--ink-soft); }
+
+/* ---------- 장소 상세 ---------- */
+.location-hero h2{ font-family:var(--serif); font-size:1.8rem; margin:0 0 4px; }
+.location-hero .hanja{ color:var(--ink-soft); }
+.location-hero .period{ display:inline-block; margin:10px 0; font-size:.85rem; color:var(--taeguk-blue); font-weight:600; }
+.location-hero p.desc{ max-width:70ch; color:var(--ink-soft); }
+
+.panel{
+  border:1px solid var(--line);
+  background:var(--white);
+  padding:20px;
+  margin-top:20px;
+}
+.panel h3{ font-family:var(--serif); font-size:1.05rem; margin:0 0 4px; }
+.panel .hint{ font-size:.8rem; color:var(--ink-soft); margin:0 0 14px; }
+
+.btn{
+  display:inline-flex; align-items:center; gap:8px;
+  background:var(--taeguk-blue); color:var(--white);
+  border:none; padding:10px 18px;
+  font-size:.88rem; font-weight:600; cursor:pointer;
+  letter-spacing:.02em;
+}
+.btn:hover{ background:var(--ink); }
+.btn.secondary{ background:transparent; color:var(--taeguk-blue); border:1px solid var(--taeguk-blue); }
+.btn.secondary:hover{ background:var(--taeguk-blue); color:var(--white); }
+
+.streetview-frame{
+  width:100%; height:420px;
+  border:1px solid var(--line);
+  margin-top:14px;
+  display:none;
+  background:#eee;
+}
+.streetview-frame.active{ display:block; }
+.streetview-fallback{
+  margin-top:14px; font-size:.85rem; color:var(--ink-soft); display:none;
+}
+.streetview-fallback.active{ display:block; }
+
+/* ---------- 영상 ---------- */
+.video-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(240px,1fr));
+  gap:18px;
+}
+.video-card{
+  cursor:pointer;
+  border:1px solid var(--line);
+  background:var(--white);
+}
+.video-thumb{
+  position:relative;
+  width:100%; aspect-ratio:16/9;
+  background:var(--ink) center/cover no-repeat;
+  overflow:hidden;
+}
+.video-thumb .play{
+  position:absolute; inset:0; margin:auto;
+  width:52px; height:52px;
+  display:flex; align-items:center; justify-content:center;
+}
+.video-thumb .play svg{ width:52px; height:52px; }
+.video-meta{ padding:10px 12px 14px; }
+.video-meta .title{ font-size:.92rem; font-weight:600; line-height:1.4; }
+.video-meta .channel{ font-size:.78rem; color:var(--ink-soft); margin-top:4px; }
+.video-meta .tag{
+  display:inline-block; margin-top:8px; font-size:.7rem;
+  color:var(--taeguk-red); border:1px solid var(--taeguk-red); padding:1px 7px;
+}
+
+/* ---------- 태극 엠블럼 (장식) ---------- */
+.taeguk-emblem{
+  width:120px; height:120px; margin:0 auto 18px;
+  border-radius:50%;
+  position:relative;
+  overflow:hidden;
+  border:2px solid var(--ink);
+}
+.taeguk-emblem .half{
+  position:absolute; width:100%; height:100%;
+  background:conic-gradient(from 0deg, var(--taeguk-red) 0 180deg, var(--taeguk-blue) 180deg 360deg);
+  border-radius:50%;
+}
+
+/* ---------- 반응형 ---------- */
+@media (max-width:640px){
+  header.site-header{ flex-direction:column; align-items:flex-start; gap:8px; padding:16px; }
+  .view{ padding:22px 16px 48px; }
+  #map{ height:340px; }
+  #city-map{ height:260px; }
+  .trigram-label{ font-size:1.25rem; }
+}
+
+footer.site-footer{
+  border-top:2px solid var(--ink);
+  padding:18px 28px;
+  font-size:.78rem;
+  color:var(--ink-soft);
+  text-align:center;
+}

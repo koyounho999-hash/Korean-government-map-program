@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>대한민국 임시정부 이동경로 지도</title>
+<meta name="description" content="대한민국 임시정부(1919~1945)가 거쳐간 도시와 활동 장소를 지도로 살펴보는 웹앱" />
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<div id="app">
+
+  <header class="site-header">
+    <div class="brand" data-nav="home">
+      <svg class="mark" viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="50" r="47" fill="#fffdf7" stroke="#14213d" stroke-width="4"/>
+        <path d="M50 3 A47 47 0 0 1 50 97 A23.5 23.5 0 0 1 50 50 A23.5 23.5 0 0 0 50 3 Z" fill="#c53a3a"/>
+        <path d="M50 97 A47 47 0 0 1 50 3 A23.5 23.5 0 0 1 50 50 A23.5 23.5 0 0 0 50 97 Z" fill="#0c4a8f"/>
+      </svg>
+      <div>
+        <h1>대한민국 임시정부 이동경로 지도</h1>
+        <span class="sub">1919 上海 — 1945 重慶, 27년의 여정</span>
+      </div>
+    </div>
+    <nav class="breadcrumb">
+      <span id="breadcrumb-path"></span>
+      <span class="sep">·</span>
+      <span class="crumb" data-nav="videos">관련 영상 보기</span>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ============ HOME / MAP VIEW ============ -->
+    <section id="view-home" class="view active">
+      <h2 class="trigram-label"><span class="tri">☰</span> 주요 도시</h2>
+      <p class="section-desc">
+        지도 위 태극 표식을 눌러 임시정부가 머물렀던 도시로 이동하세요. 도시를 선택하면
+        그곳에서 있었던 구체적인 활동 장소들을 다시 확인할 수 있습니다.
+      </p>
+
+      <div class="map-wrap">
+        <div id="map"></div>
+      </div>
+
+      <h2 class="trigram-label"><span class="tri">☷</span> 도시 목록</h2>
+      <div class="city-grid" id="city-grid"></div>
+    </section>
+
+    <!-- ============ CITY VIEW ============ -->
+    <section id="view-city" class="view">
+      <div class="city-hero" id="city-hero"></div>
+
+      <h2 class="trigram-label"><span class="tri">☲</span> 활동 장소</h2>
+      <p class="section-desc">이 도시에서 임시정부가 활동했던 장소입니다. 카드를 누르면 상세 정보와 3D 뷰, 관련 영상을 볼 수 있습니다.</p>
+
+      <div class="map-wrap">
+        <div id="city-map"></div>
+      </div>
+
+      <div class="location-grid" id="location-grid"></div>
+    </section>
+
+    <!-- ============ LOCATION DETAIL VIEW ============ -->
+    <section id="view-location" class="view">
+      <div class="location-hero" id="location-hero"></div>
+
+      <div class="panel">
+        <h3>3D로 보기</h3>
+        <p class="hint">아래 버튼을 누르면 이 장소를 스트리트뷰(3D) 화면으로 확인할 수 있습니다.</p>
+        <button class="btn" id="btn-streetview">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2 L21 7 V17 L12 22 L3 17 V7 Z" stroke="white" stroke-width="1.6"/><path d="M12 2 V22 M3 7 L12 12 L21 7" stroke="white" stroke-width="1.6"/></svg>
+          3D 뷰 열기
+        </button>
+        <iframe class="streetview-frame" id="streetview-frame" loading="lazy" allowfullscreen title="3D 스트리트뷰"></iframe>
+        <p class="streetview-fallback" id="streetview-fallback"></p>
+      </div>
+
+      <div class="panel" id="video-panel">
+        <h2 class="trigram-label" style="font-size:1.2rem;"><span class="tri">☵</span> 관련 영상 보기</h2>
+        <p class="hint">이 장소 또는 도시와 관련된 영상입니다. 카드를 누르면 실제 영상 페이지로 이동합니다.</p>
+        <div class="video-grid" id="location-video-grid"></div>
+      </div>
+    </section>
+
+    <!-- ============ ALL VIDEOS VIEW ============ -->
+    <section id="view-videos" class="view">
+      <h2 class="trigram-label"><span class="tri">☵</span> 관련 영상 보기</h2>
+      <p class="section-desc">임시정부와 관련된 영상 모음입니다. 카드를 누르면 실제 영상 페이지로 이동합니다.</p>
+      <div class="video-grid" id="all-video-grid"></div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    지도 데이터: OpenStreetMap · Leaflet — 역사 정보는 교육/전시 목적의 요약이며, 정확한 고증은 국립대한민국임시정부기념관 등 공식 자료를 참고하세요.
+  </footer>
+
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
